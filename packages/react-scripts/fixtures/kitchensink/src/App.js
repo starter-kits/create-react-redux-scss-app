@@ -1,5 +1,27 @@
 import React from 'react';
 
+class BuiltEmitter extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.callWhenDone = done => done();
+  }
+
+  componentDidMount() {
+    this.callWhenDone(() => document.dispatchEvent(new Event('ReactFeatureDidMount')));
+  }
+
+  render() {
+    const feature = React.cloneElement(React.Children.only(this.props.children), {
+      setCallWhenDone: done => {
+        this.callWhenDone = done;
+      }
+    });
+
+    return <div>{feature}</div>;
+  }
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -81,8 +103,7 @@ class App extends React.Component {
         require.ensure([], () => this.setFeature(require('./features/syntax/TemplateInterpolation').default));
         break;
       case 'unknown-ext-inclusion':
-        require.ensure([], () => this.setFeature(require('./features/webpack/UnknownExtInclusion').default)
-        );
+        require.ensure([], () => this.setFeature(require('./features/webpack/UnknownExtInclusion').default));
         break;
       default:
         this.setFeature(null);
@@ -96,7 +117,7 @@ class App extends React.Component {
 
   render() {
     const Feature = this.state.feature;
-    return Feature ? <Feature /> : null;
+    return Feature ? <BuiltEmitter><Feature /></BuiltEmitter> : null;
   }
 }
 
