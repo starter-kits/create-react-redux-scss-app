@@ -1,4 +1,4 @@
-# Create React App [![Build Status](https://travis-ci.org/starter-kits/create-react-redux-scss-app.svg?branch=master)](https://travis-ci.org/starter-kits/create-react-app)
+# Create React App [![Build Status](https://travis-ci.org/starter-kits/create-react-redux-scss-app.svg?branch=master)](https://travis-ci.org/starter-kits/create-react-redux-scss-app)
 
 Create React apps with no build configuration.
 
