@@ -81,14 +81,16 @@ function addOverlayDivTo(iframe) {
 }
 
 function overlayHeaderStyle() {
-  return 'font-size: 2em;' +
+  return (
+    'font-size: 2em;' +
     'font-family: sans-serif;' +
     'color: rgb(206, 17, 38);' +
     'white-space: pre-wrap;' +
     'margin: 0 2rem 0.75rem 0px;' +
     'flex: 0 0 auto;' +
     'max-height: 35%;' +
-    'overflow: auto;';
+    'overflow: auto;'
+  );
 }
 
 var overlayIframe = null;
@@ -127,7 +129,8 @@ function ensureOverlayDivExists(onOverlayDivReady) {
 function showErrorOverlay(message) {
   ensureOverlayDivExists(function onOverlayDivReady(overlayDiv) {
     // TODO: unify this with our runtime overlay
-    overlayDiv.innerHTML = '<div style="' +
+    overlayDiv.innerHTML =
+      '<div style="' +
       overlayHeaderStyle() +
       '">Failed to compile</div>' +
       '<pre style="' +
@@ -172,7 +175,7 @@ var connection = new SockJS(
 // to avoid spamming the console. Disconnect usually happens
 // when developer stops the server.
 connection.onclose = function() {
-  if (typeof console !== 'undefined') {
+  if (typeof console !== 'undefined' && typeof console.info === 'function') {
     console.info(
       'The development server has disconnected.\nRefresh the page if necessary.'
     );
@@ -186,8 +189,8 @@ var hasCompileErrors = false;
 
 function clearOutdatedErrors() {
   // Clean up outdated compile errors, if any.
-  if (typeof console !== 'undefined') {
-    if (hasCompileErrors && typeof console.clear === 'function') {
+  if (typeof console !== 'undefined' && typeof console.clear === 'function') {
+    if (hasCompileErrors) {
       console.clear();
     }
   }
@@ -226,8 +229,15 @@ function handleWarnings(warnings) {
       errors: [],
     });
 
-    if (typeof console !== 'undefined') {
+    if (typeof console !== 'undefined' && typeof console.warn === 'function') {
       for (var i = 0; i < formatted.warnings.length; i++) {
+        if (i === 5) {
+          console.warn(
+            'There were more warnings in other files.\n' +
+              'You can find a complete log in the terminal.'
+          );
+          break;
+        }
         console.warn(stripAnsi(formatted.warnings[i]));
       }
     }
@@ -266,7 +276,7 @@ function handleErrors(errors) {
   showErrorOverlay(formatted.errors[0]);
 
   // Also log them to the console.
-  if (typeof console !== 'undefined') {
+  if (typeof console !== 'undefined' && typeof console.error === 'function') {
     for (var i = 0; i < formatted.errors.length; i++) {
       console.error(stripAnsi(formatted.errors[i]));
     }

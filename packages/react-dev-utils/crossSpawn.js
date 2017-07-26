@@ -7,14 +7,8 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-import React from 'react';
-import aFileWithoutExt from './assets/aFileWithoutExt';
+'use strict';
 
-const text = aFileWithoutExt.includes('base64')
-  ? atob(aFileWithoutExt.split('base64,')[1]).trim()
-  : aFileWithoutExt;
+var crossSpawn = require('cross-spawn');
 
-export default () =>
-  <a id="feature-no-ext-inclusion" href={text}>
-    aFileWithoutExt
-  </a>;
+module.exports = crossSpawn;
